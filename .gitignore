@@ -1,0 +1,45 @@
+# TCAI v6 — .gitignore
+
+# Credentials
+home/.env
+!.env.example
+
+# Runtime data
+work/audit.log
+work/snapshots/
+work/op_index.jsonl
+work/tmp/
+records/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+tools/python-venv/
+
+# Bundled toolchain (use install.bat to recreate)
+tools/node/
+tools/git-portable/
+
+# PyArmor / license keys
+*.key
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
