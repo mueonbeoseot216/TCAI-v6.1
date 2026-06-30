@@ -1,0 +1,7 @@
+# TCAI v6 — Optional Dependencies
+# (Currently none — all features use stdlib)
+# 
+# To add optional deps in the future:
+# 1. Add package to this file
+# 2. Add an [optional-dependencies] group in pyproject.toml
+# 3. Implement the feature in code with a fallback
