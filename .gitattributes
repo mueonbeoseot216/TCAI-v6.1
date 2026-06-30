@@ -1,0 +1,15 @@
+# Auto-detect text files, convert to LF on commit
+* text=auto
+
+# Python files must use LF
+*.py text eol=lf
+
+# Batch files must use CRLF
+*.bat text eol=crlf
+
+# Binary files
+*.exe binary
+*.dll binary
+*.png binary
+*.jpg binary
+*.key binary
