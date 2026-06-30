@@ -1,0 +1,5 @@
+# TCAI v6 — Requirements
+
+# Core dependencies (required)
+pyyaml>=6.0
+python-dotenv>=1.0
