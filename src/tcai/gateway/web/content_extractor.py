@@ -160,3 +160,4 @@ def fetch_and_extract(
     except Exception as e:
         logger.error(f"Failed to extract text from {url}: {e}")
         return f"Failed to parse page content: {e}"
+
