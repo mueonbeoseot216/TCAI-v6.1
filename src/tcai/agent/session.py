@@ -6,6 +6,7 @@ Tracks machine ID, session ID, and writes conversation logs to disk.
 from __future__ import annotations
 
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -82,6 +83,9 @@ class Session:
                     try:
                         entries.append(json.loads(line))
                     except json.JSONDecodeError:
+                        logging.getLogger(__name__).warning(
+                            "Skipped malformed JSONL line in session log",
+                        )
                         continue
         return entries
 
@@ -144,3 +148,4 @@ class Session:
         """Append a JSON line to a file."""
         with open(filepath, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
