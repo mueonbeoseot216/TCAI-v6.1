@@ -350,3 +350,4 @@ def normalize(tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
     logger.debug("Stage 4 passed: no encoding detected")
 
     return normalized_params
+
