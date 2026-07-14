@@ -139,8 +139,8 @@ class PromptEngine:
     @staticmethod
     def _detect_stage(messages: list[dict]) -> str:
         """Detect conversation stage: idle, diagnosing, or answering."""
-        user_messages = [m for m in messages if m.get("role") == "user"]
-        tool_messages = [m for m in messages if m.get("role") == "tool"]
+        user_messages = [msg for msg in messages if msg.get("role") == "user"]
+        tool_messages = [msg for msg in messages if msg.get("role") == "tool"]
 
         if not user_messages:
             return "idle"
@@ -154,3 +154,4 @@ class PromptEngine:
         """Reset injection state for a new session."""
         self._injected.clear()
         self._conversation_started = False
+
