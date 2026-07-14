@@ -148,7 +148,12 @@ def filter_text(text: str, source: str = "unknown") -> FilterResult:
 
     if flags:
         # Check severity: non-severe flags alone don't block
-        severe = [f for f in flags if f not in _NON_SEVERE_FLAGS]
+        severe = [
+            flag for flag in flags
+            if flag not in _NON_SEVERE_FLAGS
+            and not (flag == "personal_pronoun_blocked"
+                     and source != "knowledge_base")
+        ]
         if severe:
             logger.warning(
                 f"Injection blocked: flags={flags}, source={source[:80]}"
@@ -317,3 +322,4 @@ _WATERMARK: str = (
 def add_watermark(text: str) -> str:
     """Prepend a safety watermark to search results."""
     return _WATERMARK + text
+
