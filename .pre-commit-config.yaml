@@ -1,4 +1,4 @@
-repos:
+﻿repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.0
     hooks:
@@ -26,3 +26,12 @@ repos:
         language: system
         types: [python]
         require_serial: true
+
+      - id: tcai-lint
+        name: TCAI static lint
+        entry: python tools/tcai_lint
+        language: system
+        types: [python]
+        pass_filenames: false
+
+
