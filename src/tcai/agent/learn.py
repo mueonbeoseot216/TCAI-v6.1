@@ -159,3 +159,4 @@ class LearnExtractor:
             if not dirs:  # Leaf directory
                 leaves.append(str(Path(root).relative_to(kb_path)))
         return leaves
+
