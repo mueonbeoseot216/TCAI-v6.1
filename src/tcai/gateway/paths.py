@@ -50,3 +50,4 @@ ENV_FILE: Path = HOME_DIR / ".env"
 # === Ensure runtime directories exist ===
 for _d in [HOME_DIR, WORK_DIR, RECORDS_DIR, SNAPSHOT_DIR, TMP_DIR, SESSION_DIR]:
     _d.mkdir(parents=True, exist_ok=True)
+
