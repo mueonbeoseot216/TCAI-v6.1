@@ -81,3 +81,4 @@ class PromptGate:
         """Reset state for a new session."""
         self.adapter.reset_counts()
         self._alert_count = 0
+
