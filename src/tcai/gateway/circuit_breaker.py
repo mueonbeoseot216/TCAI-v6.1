@@ -110,3 +110,4 @@ def is_open(ctx: SessionContext) -> bool:
 def get_reason(ctx: SessionContext) -> str:
     """Get the reason why the circuit is open, or empty string if closed."""
     return ctx.circuit.lock_reason if ctx.circuit.locked else ""
+
