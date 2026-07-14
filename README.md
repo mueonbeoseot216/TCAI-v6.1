@@ -1,4 +1,4 @@
-# TCAI v6
+﻿# TCAI v6.1
 
 **AI Agent Security Execution Framework for Windows Diagnostics**
 
@@ -6,7 +6,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6.svg)](https://www.microsoft.com/windows)
 
-> ⚠️ **Windows only.** There is no Linux version.
+> 鈿狅笍 **Windows only.** There is no Linux version.
 > Linux developers: you can read the code and run static checks (ruff/mypy).
 
 ---
@@ -18,41 +18,27 @@ internet cafe / diskless environments. ~10,000 lines of pure Python with only
 2 core dependencies (pyyaml + python-dotenv).
 
 **Security architecture:** A 7-layer defense-in-depth gateway decoupled from
-the LLM — injection filtering, scope checks, deobfuscation, AST rule matching,
+the LLM 鈥?injection filtering, scope checks, deobfuscation, AST rule matching,
 circuit breaker, and audit logging. Zero tokens spent on security prompting.
 
 ## Architecture
 
 ```
-User Input → Agent Loop (LLM) → MCP Gateway (stdio JSON-RPC) → Windows Tools
-                  │                        │
-                  │              ┌─────────┼──────────┐
-                  │              │  7-Layer Security  │
-                  │              │  Pipeline:         │
-                  │              │  0. Injection Filter│
-                  │              │     (chunked+marker)│
-                  │              │  1. Scope Check    │
-                  │              │  2. Deobfuscation  │
-                  │              │  3. AST Rules      │
-                  │              │  4. Intent Chain   │
-                  │              │  5. Circuit Breaker│
-                  │              │  6. Dispatch       │
-                  │              └─────────┼──────────┘
-                  │                        │
-          Knowledge Base (FTS5)    31 Tools (21 RO + 10 RW)
-           ↗ filtered + marker
+User Input 鈫?Agent Loop (LLM) 鈫?MCP Gateway (stdio JSON-RPC) 鈫?Windows Tools
+                  鈹?                       鈹?                  鈹?             鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                  鈹?             鈹? 7-Layer Security  鈹?                  鈹?             鈹? Pipeline:         鈹?                  鈹?             鈹? 0. Injection Filter鈹?                  鈹?             鈹?    (chunked+marker)鈹?                  鈹?             鈹? 1. Scope Check    鈹?                  鈹?             鈹? 2. Deobfuscation  鈹?                  鈹?             鈹? 3. AST Rules      鈹?                  鈹?             鈹? 4. Intent Chain   鈹?                  鈹?             鈹? 5. Circuit Breaker鈹?                  鈹?             鈹? 6. Dispatch       鈹?                  鈹?             鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                  鈹?                       鈹?          Knowledge Base (structured dict index)    31 Tools (21 RO + 10 RW)
+           鈫?filtered + marker
 ```
 
 ## Features
 
-- **7-layer security** — injection filter (chunked), scope check, deobfuscation, AST rules, intent chain, circuit breaker, dispatch
-- **Data isolation** — external content structurally marked as non-instruction; LLM cannot treat data as commands
-- **Knowledge base defense** — `/learn` writes filtered before storage; KB hints filtered + marker-wrapped before LLM
-- **31 diagnostic tools** — process, registry, file, services, web, WMI, GPU, runtime, blue screen, anti-cheat
-- **FTS5 knowledge base** — full-text search over Markdown + YAML knowledge entries
-- **Zero-framework Agent** — no LangChain, no AutoGPT, no Hermes; pure Python stdlib
-- **Portable** — zero hardcoded drive letters; works from any disk (removable/mobile)
-- **Audit logging** — JSONL append-only log of every security decision
+- **7-layer security** 鈥?injection filter (chunked), scope check, deobfuscation, AST rules, intent chain, circuit breaker, dispatch
+- **Data isolation** 鈥?external content structurally marked as non-instruction; LLM cannot treat data as commands
+- **Knowledge base defense** 鈥?`/learn` writes filtered before storage; KB hints filtered + marker-wrapped before LLM
+- **31 diagnostic tools** 鈥?process, registry, file, services, web, WMI, GPU, runtime, blue screen, anti-cheat
+- **Structured knowledge base** — pure Python dict indexes, no FTS5/SQLite, zero query-injection surface
+- **Zero-framework Agent** 鈥?no LangChain, no AutoGPT, no Hermes; pure Python stdlib
+- **Conversation memory** — session-spanning context with sliding window for coherent multi-turn diagnostics`n- **Portable** 鈥?zero hardcoded drive letters; works from any disk (removable/mobile)
+- **Audit logging** — JSONL append-only log of every security decision`n- **CI-ready** — ruff + mypy + tcai_lint in pre-commit and GitHub Actions 鈥?JSONL append-only log of every security decision
 
 ## Quick Start
 
@@ -65,7 +51,7 @@ User Input → Agent Loop (LLM) → MCP Gateway (stdio JSON-RPC) → Windows Too
 
 ```batch
 git clone <repo-url>
-cd TCAI-v6
+cd TCAI-v6.1
 install.bat
 ```
 
@@ -85,24 +71,23 @@ Start.bat
 
 You'll see the TCAI banner, then type your diagnostic question:
 ```
-  网管: 英雄联盟崩溃报错 3A 怎么解决？
-```
+  缃戠: 鑻遍泟鑱旂洘宕╂簝鎶ラ敊 3A 鎬庝箞瑙ｅ喅锛?```
 
 ### Commands
 
 | Command | Description |
 |---------|-------------|
-| `/help` | 显示帮助 |
-| `/new` | 开始新会话 |
-| `/machine <id>` | 设置机器编号 |
-| `/learn <path>` | 从会话日志提取知识 |
-| `/exit` | 退出 |
+| `/help` | 鏄剧ず甯姪 |
+| `/new` | 寮€濮嬫柊浼氳瘽 |
+| `/machine <id>` | 璁剧疆鏈哄櫒缂栧彿 |
+| `/learn <path>` | 浠庝細璇濇棩蹇楁彁鍙栫煡璇?|
+| `/exit` | 閫€鍑?|
 
 ## Documentation
 
 | Document | Content |
 |----------|---------|
-| [USER_GUIDE.md](USER_GUIDE.md) | 使用教程、文件说明、命令参考、知识库格式 |
+| [USER_GUIDE.md](USER_GUIDE.md) | 浣跨敤鏁欑▼銆佹枃浠惰鏄庛€佸懡浠ゅ弬鑰冦€佺煡璇嗗簱鏍煎紡 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Full system architecture |
 | [CODING_STANDARDS.md](CODING_STANDARDS.md) | Coding standards (10 sections) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
