@@ -160,3 +160,4 @@ _load_env()
 
 # Singleton config instance
 config = Config()
+
