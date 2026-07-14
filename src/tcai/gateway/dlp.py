@@ -62,8 +62,8 @@ def _classify_pattern(pattern: str) -> str:
 
 
 SENSITIVE_PATH_PATTERNS: list[SensitivePath] = [
-    SensitivePath(pattern=p, description=_classify_pattern(p))
-    for p in SENSITIVE_PATHS
+    SensitivePath(pattern=pat, description=_classify_pattern(pat))
+    for pat in SENSITIVE_PATHS
 ]
 
 
