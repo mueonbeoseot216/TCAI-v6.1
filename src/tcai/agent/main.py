@@ -12,15 +12,14 @@ from __future__ import annotations
 import os
 import sys
 
+from ..gateway.config import config
 from .mcp_client import MCPClient
 from .prompt_engine import PromptEngine
 from .prompt_gate import PromptGate
-from .knowledge import KnowledgeBase
 from .session import Session
 from .learn import LearnExtractor
 from .loop import AgentLoop
 from .ui import UI
-
 
 def _clean_path(raw: str) -> str:
     """Strip quotes (Chinese + ASCII) and whitespace from a path string."""
@@ -42,7 +41,6 @@ def _clean_path(raw: str) -> str:
             break
     return s
 
-
 def main() -> None:
     """TCAI v6 main entry point."""
     ui = UI()
@@ -58,18 +56,16 @@ def main() -> None:
 
     ui.status("初始化知识库中...")
     session = Session()
-    knowledge = KnowledgeBase()
-
     ui.status("初始化安全监视器中...")
     gate = PromptGate()
-
-    from ..gateway.knowledge_bridge import init_knowledge
-    init_knowledge(knowledge)
 
     learn_extractor = LearnExtractor()
 
     ui.status("启动 Agent 主循环中...")
-    loop = AgentLoop(mcp, prompt_engine, gate, gate.adapter, session, knowledge)
+    loop = AgentLoop(
+        mcp, prompt_engine, gate, gate.adapter, session,
+        knowledge_path=config.knowledge_path,
+    )
 
     model = os.environ.get("TCAI_MODEL", "deepseek-chat")
     ui.banner(session.session_id, model)
@@ -137,6 +133,6 @@ def main() -> None:
     mcp.stop()
     ui.status("再见")
 
-
 if __name__ == "__main__":
     main()
+
