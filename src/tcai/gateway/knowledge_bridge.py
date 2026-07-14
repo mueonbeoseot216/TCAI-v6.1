@@ -51,3 +51,4 @@ def search(query: str, limit: int = 5) -> list[dict[str, Any]]:
     except (AttributeError, TypeError) as e:
         logger.error(f"Knowledge search failed: {e}")
         return []
+
