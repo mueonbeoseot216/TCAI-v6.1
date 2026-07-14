@@ -202,3 +202,4 @@ class MCPClient:
             and self._process is not None
             and self._process.poll() is None
         )
+
