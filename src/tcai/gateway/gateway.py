@@ -28,6 +28,10 @@ from .ast_rules import Level
 
 logger = logging_setup.get_logger(__name__)
 
+# Parameter summary constants
+_SUMMARY_MAX_VAL_LEN = 60
+_SUMMARY_MAX_PARAMS = 5
+
 # Tool name → Action string mapping (for AST rule matching)
 TOOL_ACTION_MAP: dict[str, str] = {
     "file_write": "FileWrite",
@@ -42,6 +46,12 @@ TOOL_ACTION_MAP: dict[str, str] = {
     "system_file_scan": "SystemFileScan",
     "dism_health": "DismHealth",
 }
+
+
+# Tools that do NOT operate on filesystem paths
+_NON_FS_TOOLS: frozenset[str] = frozenset({
+    'reg_write', 'reg_delete_value', 'reg_query', 'service_control',
+})
 
 
 def _get_action(tool_name: str) -> str:
@@ -60,7 +70,6 @@ def enforce_write(
 
     §1.1 exemption: security pipeline orchestrator — coordinates 6 steps
     spanning scope, deobfuscation, AST rules, circuit breaker, and dispatch.
-    """
 
     Args:
         tool_name: Name of the tool being called.
@@ -91,7 +100,7 @@ def enforce_write(
 
     # ── Step 1: Scope Check ──
     path = params.get("path", params.get("key", ""))
-    if path:
+    if path and tool_name not in _NON_FS_TOOLS:
         normalized_path = scope_checker.normalize_path(str(path))
         allowed, reason = scope_checker.check_scope(normalized_path)
         if not allowed:
@@ -109,8 +118,9 @@ def enforce_write(
                 "verdict": "blocked",
                 "reason": f"Scope blocked: {reason}",
             }
-        # Update path with normalized version
+        # Copy params before mutation to preserve original for audit log
         if "path" in params:
+            params = dict(params)
             params["path"] = normalized_path
 
     # ── Step 2: Deobfuscation ──
@@ -158,7 +168,21 @@ def enforce_write(
             }
         case Level.RISKY:
             # RISKY operations require human approval
-            circuit_breaker.check(ctx, "risky", tool_name)
+            breaker_result = circuit_breaker.check(ctx, "risky", tool_name)
+            if breaker_result == "blocked":
+                audit.log_decision(
+                    session_id=session_id,
+                    tool=tool_name,
+                    params=normalized_params,
+                    verdict="blocked",
+                    reason="Circuit breaker locked: RISKY threshold exceeded",
+                    level="circuit_blocked",
+                )
+                return {
+                    "status": "blocked",
+                    "verdict": "blocked",
+                    "reason": "Security circuit locked. Too many risky operations.",
+                }
             approval_id = str(uuid.uuid4())
             ctx.pending_approvals[approval_id] = {
                 "tool_name": tool_name,
@@ -255,6 +279,7 @@ def enforce_readonly(
     Returns:
         Tool result dict.
     """
+    ctx = get_session(session_id)
     # ── Web search specific: query validation ──
     if tool_name == "web_search":
         query = str(params.get("query", "")).strip()
@@ -340,9 +365,10 @@ def enforce_readonly(
 def _summarize_params(params: dict[str, Any]) -> str:
     """Create a short parameter summary for logging."""
     items = []
-    for k, v in params.items():
-        s = str(v)
-        if len(s) > 60:
-            s = s[:57] + "..."
-        items.append(f"{k}={s}")
-    return ", ".join(items[:5])  # Max 5 params in log
+    for key, value in params.items():
+        s = str(value)
+        if len(s) > _SUMMARY_MAX_VAL_LEN:
+            s = s[:_SUMMARY_MAX_VAL_LEN - 3] + "..."
+        items.append(f"{key}={s}")
+    return ", ".join(items[:_SUMMARY_MAX_PARAMS])
+
