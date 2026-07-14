@@ -1,4 +1,4 @@
-# TCAI v6.1 鈥?Architecture
+﻿# TCAI v6.1 鈥?Architecture
 
 > This document will be updated as modules are migrated from v5.
 > For the v5 architecture, see `E:\tcai_v5\ARCHITECTURE.md`.
