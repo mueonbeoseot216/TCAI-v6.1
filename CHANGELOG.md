@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 ## 6.1.0 (2026-07-14)
 
 ### Added
