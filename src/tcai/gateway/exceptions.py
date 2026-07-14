@@ -145,3 +145,4 @@ def error_result(message: str, *, status: str = "error") -> dict[str, str]:
         Dict with "status" and "message" keys.
     """
     return {"status": status, "message": message}
+
