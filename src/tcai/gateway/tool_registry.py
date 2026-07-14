@@ -128,3 +128,4 @@ def is_write(tool_name: str) -> bool:
     """Check if a tool is a write tool (requires security pipeline)."""
     _load_tools()
     return tool_name in _write_handlers
+
